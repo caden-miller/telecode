@@ -17,16 +17,19 @@ const PORT = process.env.PORT || 3000;
 
 // Parse projects from environment
 let PROJECTS = {};
-try {
-    if (process.env.PROJECTS) {
-        PROJECTS = JSON.parse(process.env.PROJECTS);
-        console.log('✅ Loaded projects from .env');
-    } else {
-        console.error('⚠️  No PROJECTS defined in .env, using defaults');
+
+// Find all environment variables that start with PROJECT_
+Object.keys(process.env).forEach(key => {
+    if (key.startsWith('PROJECT_')) {
+        // Convert PROJECT_GTHRLY to 'gthrly'
+        const projectKey = key.replace('PROJECT_', '').toLowerCase().replace(/_/g, '-');
+        PROJECTS[projectKey] = process.env[key];
     }
-} catch (error) {
-    console.error('❌ Failed to parse PROJECTS from .env:', error.message);
-    console.error('   Check that your PROJECTS variable is valid JSON');
+});
+
+if (Object.keys(PROJECTS).length === 0) {
+    console.error('❌ No projects defined in .env');
+    console.error('   Add PROJECT_* variables to your .env file');
     process.exit(1);
 }
 
