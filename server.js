@@ -1,4 +1,6 @@
-// server.js - Complete version
+// server.js - Updated version with .env projects
+require('dotenv').config();
+
 const express = require('express');
 const { spawn } = require('child_process');
 const axios = require('axios');
@@ -7,21 +9,40 @@ const Anthropic = require('@anthropic-ai/sdk');
 const app = express();
 app.use(express.json());
 
-// Configuration
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE';
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || 'YOUR_CHAT_ID_HERE';
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || 'YOUR_API_KEY_HERE';
+// Configuration from environment
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const PORT = process.env.PORT || 3000;
+
+// Parse projects from environment
+let PROJECTS = {};
+try {
+    if (process.env.PROJECTS) {
+        PROJECTS = JSON.parse(process.env.PROJECTS);
+        console.log('✅ Loaded projects from .env');
+    } else {
+        console.error('⚠️  No PROJECTS defined in .env, using defaults');
+    }
+} catch (error) {
+    console.error('❌ Failed to parse PROJECTS from .env:', error.message);
+    console.error('   Check that your PROJECTS variable is valid JSON');
+    process.exit(1);
+}
+
+// Validate required environment variables
+const requiredEnvVars = ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'];
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0) {
+    console.error('❌ Missing required environment variables:', missingVars.join(', '));
+    console.error('   Copy .env.example to .env and fill in your values');
+    process.exit(1);
+}
 
 const anthropic = new Anthropic({
     apiKey: ANTHROPIC_API_KEY
 });
-
-// Project path mapping
-const PROJECTS = {
-    'gthrly': 'C:\\Users\\Caden\\Projects\\Gthrly',
-    'trading-bot': 'C:\\Users\\Caden\\Projects\\trading-bot',
-    'automation': 'C:\\Users\\Caden\\Projects\\automation'
-};
 
 // Store active sessions
 const sessions = new Map();
@@ -291,10 +312,10 @@ async function sendTelegram(message) {
 }
 
 // Start server
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Claude Code service running on port ${PORT}`);
     console.log(`📁 Available projects:`, Object.keys(PROJECTS));
     console.log(`🔧 Telegram configured:`, TELEGRAM_BOT_TOKEN !== 'YOUR_BOT_TOKEN_HERE');
     console.log(`🤖 Claude API configured:`, ANTHROPIC_API_KEY !== 'YOUR_API_KEY_HERE');
 });
+
