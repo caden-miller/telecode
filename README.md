@@ -1,6 +1,6 @@
 <div align="center">
 
-# claude-service
+# telecode
 
 **Autonomous coding agent you control from your phone.**
 
