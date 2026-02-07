@@ -20,21 +20,21 @@ Text a command from Telegram &rarr; Claude writes the code &rarr; commits, pushe
 
 ```
 ┌──────────┐     ┌──────────────┐     ┌──────────────────┐     ┌──────────┐
-│ Telegram │────▶│  grammy bot  │────▶│  Claude Agent SDK │────▶│  GitHub  │
-│  (phone) │◀────│  commands.js │◀────│  agent.js         │◀────│  PR/Issue│
+│ Telegram │───▶│  grammy bot  │────▶│  Claude Agent SDK│───▶│  GitHub   │
+│  (phone) │◀───│  commands.js │◀────│  agent.js        │◀───│  PR/Issue │
 └──────────┘     └──────────────┘     └──────────────────┘     └──────────┘
                         │                      │
                         │              ┌───────┴───────┐
-                        │              │  PostToolUse   │
-                        │              │  hooks track   │
-                        └──────────────│  file edits &  │
-                         progress msgs │  send updates  │
+                        │              │  PostToolUse  │
+                        │              │  hooks track  │
+                        └──────────────│  file edits & │
+                         progress msgs │  send updates │
                                        └───────────────┘
 ```
 
 **Full pipeline for every request:**
 
-1. You send a Telegram command (e.g. `/fix gthrly 23`)
+1. You send a Telegram command (e.g. `/fix myapp 23`)
 2. Bot fetches the GitHub issue, creates a branch (`fix/23`)
 3. Claude Agent SDK runs autonomously in the project directory
 4. PostToolUse hooks track every file edit and send you progress
@@ -45,7 +45,7 @@ Text a command from Telegram &rarr; Claude writes the code &rarr; commits, pushe
 
 ```bash
 # Clone & install
-git clone https://github.com/your-user/claude-service.git
+git clone https://github.com/caden-miller/claude-service.git
 cd claude-service
 npm install
 
@@ -91,18 +91,18 @@ PROJECT_WEBSITE=C:\Users\you\projects\website
 ### What You'll See
 
 ```
-Starting gthrly...
+Starting myapp...
 Task: Fix #23
 
 Branch: `fix/23`
 
 [32s] Edit | 3 files
 
-Done: gthrly
+Done: myapp
 Branch: `fix/23`
 Files: 3
 Time: 87s | Cost: $0.423
-PR: https://github.com/you/gthrly/pull/42
+PR: https://github.com/you/myapp/pull/42
 ```
 
 ## Architecture

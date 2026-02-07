@@ -17,9 +17,7 @@ Run the Claude agent inside an isolated VM so it can only access the target proj
 Configure commits to appear as a dedicated bot account rather than your personal GitHub identity, so PRs clearly show automated vs human authorship.
 
 - [ ] **Per-project git author config** — set `user.name` and `user.email` to the bot account before committing (e.g. `bot-caden-miller`)
-- [ ] **Dedicated bot GitHub token** — use a separate PAT/fine-grained token scoped to the bot account for push and PR creation
-- [ ] **Token routing in config** — support `GITHUB_BOT_TOKEN` in `.env` alongside the existing `GITHUB_TOKEN`, use bot token for agent operations
-- [ ] **Octokit instance per identity** — create a separate `Octokit({ auth: botToken })` for PR creation so the PR author is the bot
+- [ ] **Forking and PR's** — fork off project from origin (may need to provide link), then make a PR, tokens do not work on repos owned by another individual
 - [ ] **Co-authored-by trailer** — add `Co-authored-by: Claude <noreply@anthropic.com>` to commit messages for transparency
 - [ ] **Branch protection compatibility** — ensure the bot account has push access and PR creation permissions on target repos
 - [ ] **Signature verification** — optionally set up GPG signing for the bot account so commits show as "Verified"
